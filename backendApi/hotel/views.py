@@ -4,7 +4,8 @@ from django.shortcuts import render
 from django.conf.urls import url
 
 from . import views
+from django.http import HttpResponse
 
-urlpatterns = [
-    url(r'^$', views.index, name='index'),
-]
+
+def index(request):
+    return HttpResponse("欢迎访问我的博客首页！")
