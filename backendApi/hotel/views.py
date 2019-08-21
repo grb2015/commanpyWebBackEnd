@@ -18,8 +18,8 @@ def hotel_login(request):
     rows = db.select("select * from user")
     print("rows = ")
     print(rows)
-    # requestData = JSONParser().parse(request)
-    # print(requestData)
+    requestData = JSONParser().parse(request)
+    print(requestData)
     return HttpResponse("欢迎登陆!")
 
    
