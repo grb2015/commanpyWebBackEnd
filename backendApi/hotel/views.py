@@ -14,12 +14,28 @@ def hotel_index(request):
 
 def hotel_login(request):
     print("##### hotel_login")
+    requestData = JSONParser().parse(request)
+    print(requestData)
+    print("##### query in sqlite3")
     db = sqliteOperate('hotel.sqlite3')
     rows = db.select("select * from user")
     print("rows = ")
     print(rows)
-    requestData = JSONParser().parse(request)
-    print(requestData)
-    return HttpResponse("欢迎登陆!")
+    for row in rows:
+        if row[1] == requestData['userName'] and row[2] == requestData['password']:
+            data = json.dumps({ 'result': 'success',
+                                'userName': requestData['userName'],
+                                'userAuthStr':requestData['password'],
+                                'guid':'xx3'
+                            })
+            response = HttpResponse(data, status=201)
+            return response
+    data = json.dumps({ 'result': 'fail',
+                        'userName': requestData['userName'],
+                        'userAuthStr':requestData['password'],
+                        'guid':'xx3'
+                    })
+    response = HttpResponse(data, status=201)
+    return response
 
    
