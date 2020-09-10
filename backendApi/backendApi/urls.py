@@ -15,11 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-import dtbackend
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'hotel/', include('hotel.urls')),
-    # url(r'dtbackend/', include('dtbackend.urls')),
-    url(r'useraccess/', include('dtbackend.urls')),
 ]
