@@ -5,7 +5,8 @@ import json
 from django.conf.urls import url
 from . import views
 from django.http import HttpResponse
-from hotel.helperCollection import sqliteOperate,logger # 这里必须加上hotel 不然会报错
+# from hotel.helperCollection import sqliteOperate,logger # 这里必须加上hotel 不然会报错
+from hotel.helperCollection import  logger,DBHelper # 这里必须加上hotel 不然会报错
 import sqlite3
 
 def hotel_index(request):
@@ -13,29 +14,26 @@ def hotel_index(request):
     return HttpResponse("欢迎访问我的博客首页！")
 
 def hotel_login(request):
-    print("##### hotel_login")
+    g_helper = DBHelper()
     requestData = JSONParser().parse(request)
-    print(requestData)
-    print("##### query in sqlite3")
-    db = sqliteOperate('hotel.sqlite3')
-    rows = db.select("select * from user")
-    print("rows = ")
-    print(rows)
+    logger.info("[hotel_login] requestData = ")
+    logger.info(requestData)
+    response = {"result":'',"data":{}}
+    sql = 'SELECT * FROM grb_farmhouse_db.tbl_user_info;'
+    rows=  g_helper.queryAll(sql)
+    logger.info(" [hotel_login] rows = ")
+    logger.info(rows)
     for row in rows:
-        if row[1] == requestData['userName'] and row[2] == requestData['password']:
-            data = json.dumps({ 'result': 'success',
-                                'userName': requestData['userName'],
-                                'userAuthStr':requestData['password'],
-                                'guid':'xx3'
-                            })
-            response = HttpResponse(data, status=201)
-            return response
-    data = json.dumps({ 'result': 'fail',
-                        'userName': requestData['userName'],
-                        'userAuthStr':requestData['password'],
-                        'guid':'xx3'
-                    })
-    response = HttpResponse(data, status=201)
-    return response
-
-   
+        if row['user_name'] == requestData['userName'] and row['user_password'] == requestData['password']:
+            response['result'] = 'success'
+            response['userName'] = requestData['userName']
+            response['userAuthStr'] = requestData['password']
+            response['guid'] = 'xx3'
+            data=json.dumps(response)
+            return HttpResponse(data, status = 201)
+    response['result'] = 'fail'
+    response['userName'] = requestData['userName']
+    response['userAuthStr'] = requestData['password']
+    response['guid'] = 'xx3'
+    data=json.dumps(response)
+    return HttpResponse(data, status = 400)
