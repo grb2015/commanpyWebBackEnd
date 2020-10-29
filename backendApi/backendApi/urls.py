@@ -18,5 +18,6 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'hotel/', include('hotel.urls')),
+    # url(r'hotel/', include('hotel.urls')),
+    url(r'', include('hotel.urls')),  # 前端不需要带hote/过来
 ]
