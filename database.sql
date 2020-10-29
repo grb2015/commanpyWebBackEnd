@@ -39,7 +39,7 @@ CREATE TABLE `tbl_user_info` (
 
 LOCK TABLES `tbl_user_info` WRITE;
 /*!40000 ALTER TABLE `tbl_user_info` DISABLE KEYS */;
-INSERT INTO `tbl_user_info` VALUES (1,'luoxiao',4,'123456'),(2,'xiaoming',1,'123456');
+INSERT INTO `tbl_user_info` VALUES (1,'luoxiao',4,'e10adc3949ba59abbe56e057f20f883e'),(2,'xiaoming',1,'e10adc3949ba59abbe56e057f20f883e');
 /*!40000 ALTER TABLE `tbl_user_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -76,4 +76,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-09-10 11:34:31
+-- Dump completed on 2020-10-29 11:56:15
