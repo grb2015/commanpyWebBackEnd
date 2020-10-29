@@ -13,6 +13,17 @@ def hotel_index(request):
     logger.info("## 欢迎访问我的博客首页！")
     return HttpResponse("欢迎访问我的博客首页！")
 
+
+################################################################################## 
+#   breif   ：  用户登录
+#   input   :   userName   [string]     用户名
+#               password [string]     md5加密后的密码
+#   returns : [json]      {"result":xx,"data":'xxxx'}
+#                           result :        bool    值为True/False 表明是否执行成功
+#                          data:  string  给前端的附带信息 
+#                           # 1.若result为True , data 为空
+#                           # 2.若result为False, data为错误信息
+################################################################################## 
 def hotel_login(request):
     g_helper = DBHelper()
     requestData = JSONParser().parse(request)
@@ -20,23 +31,23 @@ def hotel_login(request):
     logger.info(requestData)
     response = {"result":'',"data":{}}
     sql = 'SELECT * FROM grb_farmhouse_db.tbl_user_info;'
-    rows=  g_helper.queryAll(sql)
-    logger.info(" [hotel_login] rows = ")
-    logger.info(rows)
-    for row in rows:
-        if row['user_name'] == requestData['userName'] and row['user_password'] == requestData['password']:
-            response['result'] = 'success'
-            response['userName'] = requestData['userName']
-            response['userAuthStr'] = requestData['password']
-            response['guid'] = 'xx3'
-            data=json.dumps(response)
-            return HttpResponse(data, status = 201)
-    response['result'] = 'fail'
-    response['userName'] = requestData['userName']
-    response['userAuthStr'] = requestData['password']
-    response['guid'] = 'xx3'
-    data=json.dumps(response)
-    return HttpResponse(data, status = 400)
+    try:
+        rows=  g_helper.queryAll(sql)
+        logger.info(" [hotel_login] rows = ")
+        logger.info(rows)
+        for row in rows:
+            if row['user_name'] == requestData['userName'] and row['user_password'] == requestData['password']:
+                rt = json.dumps( {"result":True,"data":None} )
+                logger.info("########### [hotel_login] 新增成功。")
+                return HttpResponse(rt, status = 201)
+        rt = json.dumps( {"result":False,"data":"登陆出错:用户名或密码错误！"} )
+        return HttpResponse(rt,status=400)
+    except Exception as e:
+        logger.info("######### [hotel_login] 登陆出错  e = ")
+        logger.info(e)
+        rt = json.dumps( {"result":False,"data":"登陆出错"+str(e)} )
+        return HttpResponse(rt,status=400)
+ 
 
 
 
@@ -63,10 +74,10 @@ def sign_up(request):
     try:
         insert_into_db(insert_rows,'grb_farmhouse_db.tbl_user_info')
         rt = json.dumps( {"result":True,"data":None} )
-        logger.info("########### [join_family] 新增成功。")
+        logger.info("########### [sign_up] 新增成功。")
         return HttpResponse(rt, status = 201)
     except Exception as e:
-        logger.info("######### [join_family] 新增失败  e = ")
+        logger.info("######### [sign_up] 新增失败  e = ")
         logger.info(e)
         rt = json.dumps( {"result":False,"data":"插入出错"+str(e)} )
         return HttpResponse(rt,status=400)
